@@ -183,6 +183,8 @@ void Scene::Draw() {
 		break;
 
 	case Phase::kPlay:
+		Novice::DrawBox(0, 0, 1280, 720, 0.0f, 0x999999FF, kFillModeSolid);
+
 		map_->DrawGrid();
 
 		for (auto& block : whiteBlocks_) {
@@ -208,8 +210,8 @@ void Scene::Draw() {
 			Novice::ScreenPrintf(100, 720 - 60, "In Selector Mode, you cannot use the 'Undo' action.");
 		}
 
-		player_->Draw();
 		goal_.Draw();
+		player_->Draw();
 
 		break;
 
