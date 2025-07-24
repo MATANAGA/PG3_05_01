@@ -1,22 +1,25 @@
 #pragma once
+#include "Player.h"
 
-class Player;
-
-// コマンドクラス
 class ICommand {
 public:
-	virtual ~ICommand();
+	virtual ~ICommand() {}
 	virtual void Execute(Player& player) = 0;
 };
 
-// 右移動コマンド
 class MoveRightCommand : public ICommand {
 public:
 	void Execute(Player& player) override;
 };
-
-// 左移動コマンド
 class MoveLeftCommand : public ICommand {
+public:
+	void Execute(Player& player) override;
+};
+class MoveUpCommand : public ICommand {
+public:
+	void Execute(Player& player) override;
+};
+class MoveDownCommand : public ICommand {
 public:
 	void Execute(Player& player) override;
 };
