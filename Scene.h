@@ -4,9 +4,17 @@
 #include "Block.h"
 #include "Map.h"
 #include <vector>
+#include "Goal.h"
 
 class Scene {
 public:
+	enum class Phase {
+		kTitle,
+		kPlay,
+		kClear
+	};
+	Phase phase_ = Phase::kTitle;
+
 	struct GameState {
 		Vector2 playerPos;
 		Vector2 blockPos;
@@ -31,5 +39,8 @@ private:
 
 	//
 	WhiteBlock* targetBlock_ = nullptr;
+
+	Goal goal_;                  // ← 终点
+	bool isClear_ = false;       // ← 是否通关
 };
 
