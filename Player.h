@@ -6,6 +6,7 @@ class Player {
 private:
 	Vector2 position_;
 	float speed_ = 40.0f;
+	int textureHandle_ = -1;
 
 public:
 	void Initialize();

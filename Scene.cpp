@@ -40,6 +40,12 @@ void Scene::Initialize() {
 		whiteBlocks_.push_back(block);
 	}
 	goal_.Initialize({ 600.0f, 400.0f });
+	titleTexture_ = Novice::LoadTexture("./NoviceResources/title.png");
+	clearTexture_ = Novice::LoadTexture("./NoviceResources/gameClear.png");
+
+	titleBgmHandle_ = Novice::LoadAudio("./NoviceResources/titleBGM.mp3");
+	currentBgmPlaying_ = -1; // 初始时没有播放任何 BGM
+
 
 }
 
@@ -54,9 +60,13 @@ void Scene::Update() {
 			Initialize();  // 重新初始化游戏内容
 			phase_ = Phase::kPlay;
 		}
+		PlayBGM(titleBgmHandle_);
+
+	
 		break;
 
 	case Phase::kPlay: {
+
 		ICommand* iCommand_ = inputHandler_->HandleInput();
 
 		Vector2 moveDelta = { 0, 0 };
@@ -168,6 +178,7 @@ void Scene::Update() {
 	}
 
 	case Phase::kClear:
+
 		if (keys[DIK_SPACE] && !preSpaceKey_) {
 			phase_ = Phase::kTitle;
 		}
@@ -179,23 +190,23 @@ void Scene::Update() {
 void Scene::Draw() {
 	switch (phase_) {
 	case Phase::kTitle:
-		Novice::ScreenPrintf(100, 300, "=== PUSH SPACE TO START ===");
+		Novice::DrawSprite(0, 0, titleTexture_, 1.0f, 1.0f, 0.0f, 0xFFFFFFFF);
 		break;
 
 	case Phase::kPlay:
 		Novice::DrawBox(0, 0, 1280, 720, 0.0f, 0x999999FF, kFillModeSolid);
 
 		map_->DrawGrid();
+		goal_.Draw();
+		player_->Draw();
 
 		for (auto& block : whiteBlocks_) {
 			block.Draw();
 			if (isCarrying_) {
 				if (IsHit(player_->GetPosition(), 40.0f, block.position_, block.size_)) {
-					block.color = 0xFF0000FF;
 				}
 			}
 			else {
-				block.color = 0xFFFFFFFF;
 			}
 		}
 
@@ -210,15 +221,23 @@ void Scene::Draw() {
 			Novice::ScreenPrintf(100, 720 - 60, "In Selector Mode, you cannot use the 'Undo' action.");
 		}
 
-		goal_.Draw();
-		player_->Draw();
 
 		break;
 
 	case Phase::kClear:
-		Novice::ScreenPrintf(100, 300, "CLEAR!! All blocks delivered.");
+		Novice::DrawSprite(0, 0, clearTexture_, 1.0f, 1.0f, 0.0f, 0xFFFFFFFF);
 		Novice::ScreenPrintf(100, 350, "Press SPACE to return to Title.");
 		break;
 	}
 }
 
+void Scene::PlayBGM(int bgmResource) {
+	if (currentBgmResource_ != bgmResource) {
+		if (currentBgmPlaying_ != -1) {
+			Novice::StopAudio(currentBgmPlaying_);
+			currentBgmPlaying_ = -1;
+		}
+		currentBgmPlaying_ = Novice::PlayAudio(bgmResource, true, 0.5f);
+		currentBgmResource_ = bgmResource;
+	}
+}

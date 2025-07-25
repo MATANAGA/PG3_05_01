@@ -3,16 +3,17 @@
 
 void Player::Initialize() {
 	position_ = { 0, 0 };
+	textureHandle_ = Novice::LoadTexture("./NoviceResources/player.png");
+
 }
 
 void Player::Update() {}
 
 void Player::Draw() {
 
-	Novice::DrawBox((int)position_.x, (int)position_.y, 40, 40, 0.0f, RED, kFillModeWireFrame);
+	Novice::DrawSprite((int)position_.x, (int)position_.y,
+		textureHandle_, 0.25f, 0.25f, 0.0f, 0xFFFFFFFF);
 	
-	
-
 } 
 
 void Player::MoveRight() {
